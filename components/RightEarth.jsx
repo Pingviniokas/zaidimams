@@ -7,30 +7,31 @@ import { useTransform } from 'framer-motion';
 const MODEL_PATH = 'images/modelisbiuras.glb';
 useGLTF.preload(MODEL_PATH);
 
-function OfficeModel({ progress }) {
+function RightOfficeModel({ progress }) {
   const { scene } = useGLTF(MODEL_PATH);
   const clonedScene = useMemo(() => scene.clone(), [scene]);
   const meshRef = useRef();
   
-  const modelProgress = useTransform(progress, [0, 0.3], [0, 1]);
+  const modelProgress = useTransform(progress, [0.3, 1], [0, 1]);
 
   useFrame(() => {
     if (meshRef.current) {
       const currentProgress = modelProgress.get();
       
-      // Clean 360-degree rotation around the building
-      const rotationY = currentProgress * Math.PI * 2;
+      // Different rotation pattern - half turn and tilt
+      const rotationY = -currentProgress * Math.PI;
+      const rotationZ = currentProgress * Math.PI / 4;
       
-      // Smooth zoom effect - starts further out, zooms in slightly
-      const zPosition = -3 + currentProgress;
+      // Zoom out slightly while rotating
+      const scale = 1 + (1 - currentProgress) * 0.3;
       
-      // Subtle tilt as it rotates
-      const rotationX = Math.PI / 6 + (currentProgress * Math.PI / 12);
+      // Move slightly forward while rotating
+      const zPosition = -2 - currentProgress;
 
-      meshRef.current.rotation.x = rotationX;
       meshRef.current.rotation.y = rotationY;
+      meshRef.current.rotation.z = rotationZ;
       meshRef.current.position.z = zPosition;
-      meshRef.current.scale.setScalar(1 + currentProgress * 0.2);
+      meshRef.current.scale.setScalar(scale);
     }
   });
 
@@ -38,17 +39,17 @@ function OfficeModel({ progress }) {
     <primitive 
       ref={meshRef} 
       object={clonedScene}
-      position={[-1.5, -1, -2]}
+      position={[1.5, -1, -2]}
       rotation={[Math.PI / 3, 0, 0]}
       dispose={null}
     />
   );
 }
 
-export default function Earth({ progress }) {
+export default function RightEarth({ progress }) {
   return (
     <Canvas 
-      style={{ position: 'absolute', width: '50%', height: '100%', left: 0 }}
+      style={{ position: 'absolute', width: '50%', height: '100%', right: 0 }}
       camera={{ position: [0, 2, 5] }}
     >
       <Environment preset="city" />
@@ -63,7 +64,7 @@ export default function Earth({ progress }) {
         color="#ffffff"
       />
       <Suspense fallback={null}>
-        <OfficeModel progress={progress} />
+        <RightOfficeModel progress={progress} />
       </Suspense>
     </Canvas>
   );

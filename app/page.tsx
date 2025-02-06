@@ -1,35 +1,71 @@
 "use client";
+import { useRef, Suspense } from 'react';
 import Earth from '../components/Earth';
-import { motion, useScroll } from 'framer-motion';
+import RightEarth from '../components/RightEarth';
+import TextContent from '../components/TextContent';
+import RightTextContent from '../components/RightTextContent';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ScrollIndicator from '../components/ScrollIndicator';
+import { useScroll, useTransform, motion } from 'framer-motion';
 
 export default function Home() {
-  const { scrollYProgress } = useScroll();
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  const translateY = useTransform(
+    scrollYProgress,
+    [0, 0.3, 1], 
+    ['0vh', '0vh', '-100vh']
+  );
 
   return (
-    <div style={{ height: '300vh' }}>
-      <div style={{ 
-        position: 'fixed', 
-        width: '100%', 
-        height: '100%',
-        backgroundImage: 'url(/images/bck.jpeg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }}>
-        <Earth />
-      </div>
-      <motion.div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          color: 'white',
-          fontSize: '2rem',
-          opacity: scrollYProgress,
+    <div ref={containerRef} style={{ height: '300vh' }}>
+      <motion.div 
+        style={{ 
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100vh',
+          y: translateY
         }}
       >
-        Scroll to rotate and zoom!
+        <section style={{ 
+          height: '100vh',
+          width: '100%',
+          position: 'relative',
+          backgroundImage: 'url(/images/bck.jpeg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          display: 'flex',
+          alignItems: 'center',
+        }}>
+          <Suspense fallback={<LoadingSpinner />}>
+            <Earth progress={scrollYProgress} />
+            <TextContent progress={scrollYProgress} />
+          </Suspense>
+        </section>
+
+        <section style={{ 
+          height: '100vh',
+          width: '100%',
+          position: 'relative',
+          backgroundImage: 'url(/images/bck.jpeg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          display: 'flex',
+          alignItems: 'center',
+        }}>
+          <Suspense fallback={<LoadingSpinner />}>
+            <RightEarth progress={scrollYProgress} />
+            <RightTextContent progress={scrollYProgress} />
+          </Suspense>
+        </section>
       </motion.div>
+      <ScrollIndicator progress={scrollYProgress} />
     </div>
   );
 }

@@ -47,6 +47,7 @@ export default function Accordion({ title, content, delay, progress }) {
       </motion.div>
 
       <motion.div
+        initial={{ height: 0, opacity: 0 }}
         animate={{
           height: isOpen ? 'auto' : 0,
           opacity: isOpen ? 1 : 0
@@ -54,16 +55,18 @@ export default function Accordion({ title, content, delay, progress }) {
         transition={{ duration: 0.3 }}
         style={{
           overflow: 'hidden',
-          padding: isOpen ? '1rem' : '0 1rem',
+          padding: 0,
           lineHeight: '1.6',
           fontSize: '1rem',
         }}
       >
-        {content.split('\n').map((line, index) => (
-          <div key={index} style={{ marginBottom: '0.5rem' }}>
-            {line}
-          </div>
-        ))}
+        <div style={{ padding: '1rem' }}>
+          {content.split('\n').map((line, index) => (
+            <div key={index} style={{ marginBottom: '0.5rem' }}>
+              {line}
+            </div>
+          ))}
+        </div>
       </motion.div>
     </motion.div>
   );

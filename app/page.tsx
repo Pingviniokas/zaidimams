@@ -4,8 +4,6 @@ import Earth from '../components/Earth';
 import RightEarth from '../components/RightEarth';
 import TextContent from '../components/TextContent';
 import RightTextContent from '../components/RightTextContent';
-import LoadingSpinner from '../components/LoadingSpinner';
-import ScrollIndicator from '../components/ScrollIndicator';
 import { useScroll, useTransform, motion } from 'framer-motion';
 
 export default function Home() {
@@ -43,7 +41,7 @@ export default function Home() {
           display: 'flex',
           alignItems: 'center',
         }}>
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspense fallback={null}>
             <Earth progress={scrollYProgress} />
             <TextContent progress={scrollYProgress} />
           </Suspense>
@@ -59,13 +57,12 @@ export default function Home() {
           display: 'flex',
           alignItems: 'center',
         }}>
-          <Suspense fallback={<LoadingSpinner />}>
+          <Suspense fallback={null}>
             <RightEarth progress={scrollYProgress} />
             <RightTextContent progress={scrollYProgress} />
           </Suspense>
         </section>
       </motion.div>
-      <ScrollIndicator progress={scrollYProgress} />
     </div>
   );
 }

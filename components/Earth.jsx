@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useRef, useMemo } from "react";
+import { Suspense, useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, Environment } from "@react-three/drei";
 import { useTransform, animate } from "framer-motion";
@@ -11,14 +11,27 @@ function OfficeModel({ progress }) {
   const { scene } = useGLTF(MODEL_PATH);
   const clonedScene = useMemo(() => scene.clone(), [scene]);
   const meshRef = useRef();
+  const [opacity, setOpacity] = useState(0);
 
   // Starting position and rotation
-  const startPosition = { x: -0.419, y: -0.17024, z: 1 };
-  const startRotation = { x: -0.25, y: 0, z: 0 };
+  const startPosition = { x: -0.419, y: -0.17024, z: 1.5 };
+  const startRotation = { x: -0.3, y: 0, z: 0 };
 
   // Restrict rotation to a small range
   const rotationProgress = useTransform(progress, [0, 1], [-0.3, 0.3]); // Limited rotation range
   const scaleProgress = useTransform(progress, [0, 1], [1, 1.5]); // Subtle zoom
+
+  // Fade-in effect
+  useEffect(() => {
+    const sequence = animate(0, 1, {
+      duration: 1,
+      ease: "easeInOut",
+      onUpdate: (value) => {
+        setOpacity(value);
+      }
+    });
+    return () => sequence.stop();
+  }, []);
 
   useFrame(() => {
     if (meshRef.current) {
@@ -34,6 +47,14 @@ function OfficeModel({ progress }) {
       // Apply zoom effect
       const scale = scaleProgress.get();
       meshRef.current.scale.set(scale, scale, scale);
+
+      // Apply opacity to all meshes
+      meshRef.current.traverse((child) => {
+        if (child.isMesh) {
+          child.material.transparent = true;
+          child.material.opacity = opacity;
+        }
+      });
     }
   });
 

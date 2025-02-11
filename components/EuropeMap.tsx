@@ -1,10 +1,11 @@
 "use client";
 import { Suspense, useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import { useGLTF, Html, Environment } from "@react-three/drei";
+import { useGLTF, Environment } from "@react-three/drei";
 import gsap from "gsap";
 import * as THREE from "three";
 import { countryServices } from '@/data/countryServices';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const MODEL_PATH = "/images/europe.glb";
 useGLTF.preload(MODEL_PATH);
@@ -254,6 +255,7 @@ const scrollbarStyles = `
 `;
 
 export default function EuropeMap() {
+    const { theme } = useTheme();
     const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
     const cameraRef = useRef<THREE.Camera | null>(null);
 
@@ -337,25 +339,23 @@ export default function EuropeMap() {
         }}>
             <style>{scrollbarStyles}</style>
             <div 
-                className="custom-scrollbar opacity-0 animate-slide-left"
+                className="custom-scrollbar country-list-item"
                 style={{ 
                     position: "absolute", 
                     top: "50%",
                     transform: "translateY(-50%)",
                     left: 20, 
                     zIndex: 1,
-                    background: "rgba(30, 30, 30, 0.98)",
                     padding: "16px",
                     borderRadius: "16px",
-                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    boxShadow: theme === 'light' 
+                        ? "0 8px 32px rgba(0, 0, 0, 0.1)"
+                        : "0 8px 32px rgba(0, 0, 0, 0.2)",
                     width: "300px",
                     maxHeight: "60vh",
                     overflowY: "auto",
-                    scrollbarWidth: "thin",
-                    scrollbarColor: "rgba(255, 255, 255, 0.2) transparent",
-                    WebkitFontSmoothing: "antialiased",
-                    MozOsxFontSmoothing: "grayscale",
+                    willChange: "transform",
+                    backfaceVisibility: "hidden"
                 }}
             >
                 <div style={{
@@ -449,58 +449,35 @@ export default function EuropeMap() {
                 {COUNTRIES.map((country, index) => (
                     <button
                         key={country.name}
-                        className={`stagger-item hover-scale`}
-                        onClick={() => zoomToCountry(country.name, country.center || new THREE.Vector3())}
+                        onClick={() => country.center && zoomToCountry(country.name, country.center)}
+                        className="country-list-button w-full text-left mb-2 p-4 rounded-lg"
                         style={{
                             display: "flex",
-                            width: "100%",
-                            margin: "4px 0",
-                            padding: "10px 14px",
-                            background: selectedCountry === country.name 
-                                ? "rgba(255, 255, 255, 0.15)"
-                                : "rgba(255, 255, 255, 0.05)",
-                            border: "1px solid rgba(255, 255, 255, 0.1)",
-                            borderRadius: "8px",
-                            cursor: "pointer",
-                            color: "#FFFFFF",
-                            fontWeight: "600",
-                            fontSize: "12px",
-                            letterSpacing: "0.7px",
-                            textTransform: "uppercase",
-                            transition: "all 0.2s",
-                            textAlign: "left",
-                            alignItems: "center",
                             justifyContent: "space-between",
-                            fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
-                            transform: "translateZ(0)",
-                            WebkitFontSmoothing: "antialiased",
-                            MozOsxFontSmoothing: "grayscale",
-                            textRendering: "geometricPrecision",
-                            textShadow: "0 0 1px rgba(0, 0, 0, 0.1)",
+                            alignItems: "center",
+                            fontSize: "14px",
+                            letterSpacing: "0.3px",
+                            transition: "none",
+                            transform: "none",
+                            border: "1px solid rgba(255, 255, 255, 0.1)",
+                            userSelect: "none"
                         }}
                     >
-                        <span style={{
-                            transform: "translateZ(0)",
-                            WebkitFontSmoothing: "antialiased",
-                            MozOsxFontSmoothing: "grayscale",
-                            textRendering: "geometricPrecision",
-                        }}>
+                        <div className="font-medium">
                             {country.fullName}
-                        </span>
+                        </div>
                         <span style={{ 
                             fontSize: "10px",
                             opacity: 0.7,
                             fontWeight: "700",
                             backgroundColor: selectedCountry === country.name
-                                ? "rgba(255, 255, 255, 0.2)"
-                                : "rgba(0, 0, 0, 0.2)",
+                                ? theme === 'light' 
+                                    ? "rgba(0, 0, 0, 0.1)"
+                                    : "rgba(255, 255, 255, 0.1)"
+                                : "transparent",
                             padding: "4px 8px",
                             borderRadius: "4px",
                             letterSpacing: "1px",
-                            transform: "translateZ(0)",
-                            WebkitFontSmoothing: "antialiased",
-                            MozOsxFontSmoothing: "grayscale",
-                            textRendering: "geometricPrecision",
                         }}>
                             {country.name}
                         </span>
@@ -537,6 +514,7 @@ export default function EuropeMap() {
                 position: "absolute",
                 top: "40px",
                 left: "50%",
+                transform: "translate(-50%, 0)",
                 zIndex: 1,
                 textAlign: "center",
                 background: "rgba(255, 255, 255, 0.15)",
@@ -544,7 +522,7 @@ export default function EuropeMap() {
                 borderRadius: "16px",
                 boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
                 border: "1px solid rgba(255, 255, 255, 0.2)",
-                willChange: "transform, opacity",
+                willChange: "transform",
                 WebkitFontSmoothing: "antialiased",
                 MozOsxFontSmoothing: "grayscale",
             }} className="animate-title">
@@ -566,26 +544,22 @@ export default function EuropeMap() {
 
             {selectedCountry && (
                 <div 
-                    className="animate-slide-right"
+                    className="info-panel animate-slide-right"
                     style={{
                         position: "absolute",
                         top: "50%",
                         right: 20,
                         transform: "translateY(-50%)",
                         zIndex: 1,
-                        background: "rgba(30, 30, 30, 0.98)",
                         padding: "16px",
                         borderRadius: "16px",
-                        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
-                        border: "1px solid rgba(255, 255, 255, 0.1)",
+                        boxShadow: theme === 'light' 
+                            ? "0 8px 32px rgba(0, 0, 0, 0.1)"
+                            : "0 8px 32px rgba(0, 0, 0, 0.2)",
                         width: "500px",
                         height: "60vh",
                         display: "flex",
                         flexDirection: "column",
-                        willChange: "transform",
-                        backfaceVisibility: "hidden",
-                        WebkitFontSmoothing: "antialiased",
-                        MozOsxFontSmoothing: "grayscale",
                     }}
                 >
                     <div style={{
@@ -623,14 +597,11 @@ export default function EuropeMap() {
                         </button>
                     </div>
 
-                    <div 
-                        className="custom-scrollbar"
-                        style={{
-                            flex: 1,
-                            overflowY: "auto",
-                            marginBottom: "16px"
-                        }}
-                    >
+                    <div className="custom-scrollbar description-box" style={{
+                        flex: 1,
+                        overflowY: "auto",
+                        marginBottom: "16px"
+                    }}>
                         <div style={{
                             color: "rgba(255, 255, 255, 0.8)",
                             marginBottom: "24px",
@@ -718,7 +689,8 @@ export default function EuropeMap() {
                 gl={{ 
                     antialias: true,
                     alpha: true,
-                    powerPreference: "high-performance"
+                    powerPreference: "high-performance",
+                    precision: "highp"
                 }}
                 onCreated={(state) => {
                     cameraRef.current = state.camera;

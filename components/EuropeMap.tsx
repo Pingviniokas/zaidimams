@@ -699,7 +699,11 @@ export default function EuropeMap() {
                     }
                 }}
             >
-                <Environment preset="city" />
+                <Environment
+                    preset="city"
+                    background={false}
+                    blur={0.8}
+                />
                 <Suspense fallback={null}>
                     <EuropeMapModel 
                         selectedCountry={selectedCountry} 

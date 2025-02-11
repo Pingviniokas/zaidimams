@@ -18,7 +18,7 @@ export default function LoadingScreen({ isLoading }: { isLoading: boolean }) {
                 <motion.div
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+                    className="loading-container"
                 >
                     <div className="relative">
                         {/* Simple loading spinner */}

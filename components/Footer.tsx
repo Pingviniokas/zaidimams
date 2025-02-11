@@ -1,11 +1,11 @@
 "use client";
 import { useTheme } from '@/contexts/ThemeContext';
 
-export default function Footer() {
+export default function Footer({ className = '' }: { className?: string }) {
     const { theme } = useTheme();
 
     return (
-        <footer className="relative z-50 px-8 py-12 mt-auto">
+        <footer className={`relative z-50 px-8 py-12 mt-auto ${className}`}>
             <div className="max-w-[2000px] mx-auto">
                 <div className={`backdrop-blur-md rounded-2xl p-12 border ${
                     theme === 'light' ? 'border-black/10' : 'border-white/10'

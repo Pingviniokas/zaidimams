@@ -29,8 +29,8 @@ export default function RootLayoutContent({
         <body className={className}>
             <LoadingScreen isLoading={isLoading} />
             <ThemeProvider>
-                {/* Background */}
-                <div className="background-container fixed inset-0" style={{ zIndex: -1 }}>
+                {/* Background with fixed dimensions */}
+                <div className="background-container fixed inset-0" style={{ zIndex: -1, minHeight: '100vh' }}>
                     <div className="animated-bg">
                         <div className="stars"></div>
                         <div className="shooting-star"></div>
@@ -44,12 +44,14 @@ export default function RootLayoutContent({
                     </div>
                 </div>
 
-                {/* Content wrapper */}
-                <div className="flex flex-col min-h-screen">
-                    <div className="h-32" /> {/* Changed h-28 to h-32 to match new header padding */}
+                {/* Content wrapper with fixed dimensions */}
+                <div className="flex flex-col min-h-screen relative">
+                    <div className="h-32 flex-none" /> {/* Fixed height spacer */}
                     <Header />
-                    <main className="flex-1">
-                        {children}
+                    <main className="flex-1 relative w-full" style={{ minHeight: 'calc(100vh - 128px)' }}>
+                        <div className="relative w-full h-full">
+                            {children}
+                        </div>
                     </main>
                     <Footer />
                 </div>

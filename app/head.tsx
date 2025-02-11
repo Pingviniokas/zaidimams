@@ -1,0 +1,9 @@
+<head>
+    <link
+        rel="preload"
+        href="/fonts/sf-pro-display.woff2"
+        as="font"
+        type="font/woff2"
+        crossOrigin="anonymous"
+    />
+</head> 

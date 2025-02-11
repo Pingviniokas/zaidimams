@@ -9,7 +9,7 @@ export default function Header() {
         <header className="fixed inset-x-0 top-0 z-50">
             <div className="w-full pt-12 px-8">
                 <div className="max-w-[2000px] mx-auto">
-                    <nav className="flex items-center backdrop-blur-md bg-black/10 rounded-2xl px-8 py-4 border border-white/10 animate-fade-in">
+                    <nav className="nav-container flex items-center backdrop-blur-md bg-black/10 rounded-2xl px-8 py-4 border border-white/10 animate-fade-in">
                         {/* Logo with animation */}
                         <Link 
                             href="/" 
@@ -22,7 +22,7 @@ export default function Header() {
                         </Link>
 
                         {/* Center Navigation */}
-                        <div className="flex-1 flex justify-center">
+                        <div className="flex-1 flex justify-center min-h-[24px]">
                             <div className="flex gap-12">
                                 {['Pradinis', 'Paslaugos', 'Apie mus', 'Blogas'].map((item) => (
                                     <Link 

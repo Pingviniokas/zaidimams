@@ -22,13 +22,19 @@ canvas {
   touch-action: none;
 }
 
-.animated-bg {
+/* Optimize glow effects to prevent layout shifts */
+.background-container {
     position: fixed;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(220deg, #000000, #0a0a0a, #080828);
+    inset: 0;
     overflow: hidden;
-    z-index: 0;
+    z-index: -1;
+    contain: strict; /* Contain everything */
+}
+
+.animated-bg {
+    position: absolute;
+    inset: 0;
+    contain: layout paint; /* Contain layout and paint operations */
 }
 
 .glow-effect {
@@ -38,7 +44,15 @@ canvas {
     pointer-events: none;
     mix-blend-mode: screen;
     content-visibility: auto;
-    contain: paint;
+    contain: strict;
+    will-change: transform;
+    transform: translateZ(0); /* Force layer creation */
+}
+
+.glow-1, .glow-2, .glow-3 {
+    position: fixed; /* Change to fixed positioning */
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
 }
 
 .glow-1 {
@@ -49,7 +63,6 @@ canvas {
     height: 150vh;
     opacity: 0.15;
     animation: floatDiagonal 25s ease-in-out infinite;
-    transform: translate3d(0, 0, 0);
 }
 
 .glow-2 {
@@ -60,7 +73,6 @@ canvas {
     height: 170vh;
     opacity: 0.1;
     animation: floatDiagonalReverse 30s ease-in-out infinite;
-    transform: translate3d(0, 0, 0);
 }
 
 .glow-3 {

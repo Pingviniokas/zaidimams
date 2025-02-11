@@ -13,9 +13,9 @@ export default function Footer({ className = '' }: { className?: string }) {
                     <div className="grid grid-cols-4 gap-16">
                         {/* Logo Section */}
                         <div className="space-y-4">
-                            <h3 className="text-xl font-light tracking-wider text-white/90 font-display">
+                            <h2 className="text-xl font-light tracking-wider text-white/90 font-display">
                                 MES JAU ČIA
-                            </h3>
+                            </h2>
                             <p className="text-sm text-white/60 leading-relaxed">
                                 Profesionalios perkraustymo paslaugos visoje Europoje. Saugus ir patikimas daiktų pervežimas.
                             </p>
@@ -23,7 +23,9 @@ export default function Footer({ className = '' }: { className?: string }) {
 
                         {/* Quick Links */}
                         <div className="space-y-4">
-                            <h4 className="text-sm font-medium text-white/80">Nuorodos</h4>
+                            <h3 className="text-sm font-medium text-white/80">
+                                Nuorodos
+                            </h3>
                             <div className="space-y-2">
                                 {['Pradinis', 'Paslaugos', 'Apie mus', 'Blogas'].map((item) => (
                                     <a 
@@ -39,7 +41,9 @@ export default function Footer({ className = '' }: { className?: string }) {
 
                         {/* Contact Info */}
                         <div className="space-y-4">
-                            <h4 className="text-sm font-medium text-white/80">Kontaktai</h4>
+                            <h3 className="text-sm font-medium text-white/80">
+                                Kontaktai
+                            </h3>
                             <div className="space-y-2 text-sm text-white/60">
                                 <p>+370 600 00000</p>
                                 <p>info@mesjaucia.lt</p>
@@ -49,7 +53,9 @@ export default function Footer({ className = '' }: { className?: string }) {
 
                         {/* Newsletter */}
                         <div className="space-y-4">
-                            <h4 className="text-sm font-medium text-white/80">Naujienlaiškis</h4>
+                            <h3 className="text-sm font-medium text-white/80">
+                                Naujienlaiškis
+                            </h3>
                             <div className="flex gap-2">
                                 <input 
                                     type="email" 
